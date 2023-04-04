@@ -24,6 +24,8 @@
     "@adonisjs/core": "^5.9.0",
     "@adonisjs/lucid": "^10.0.0",
     "@adonisjs/repl": "^3.1.11",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
     "luxon": "^3.3.0",
     "pg": "^8.10.0",
     "proxy-addr": "^2.0.7",
