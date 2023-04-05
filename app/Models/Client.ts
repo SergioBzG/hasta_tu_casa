@@ -14,7 +14,10 @@ export default class Client extends BaseModel {
   @column.dateTime({ autoCreate: true }) public createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true }) public updatedAt: DateTime
 
-  @belongsTo(() => User)
+  @belongsTo(() => User, {
+    localKey: 'phone',
+    foreignKey: 'phone'
+  })
   public user: BelongsTo<typeof User>
 
   @manyToMany(() => Offer, {

@@ -5,7 +5,7 @@ export default class ServiceProviders extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').primary()
+      table.increments('id')
       table.string('phone', 30).unique().notNullable().references('phone').inTable('users').onDelete('CASCADE')
       table.string('professional_profile', 255).notNullable()
       table.string('document_number', 255).notNullable()

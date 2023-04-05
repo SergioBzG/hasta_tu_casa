@@ -5,7 +5,7 @@ export default class Ratings extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').primary()
+      table.increments('id')
       table.integer('efficiency').notNullable()
       table.integer('efficacy').notNullable()
       table.integer('customer_service').notNullable()

@@ -5,7 +5,7 @@ export default class Offers extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').primary()
+      table.increments('id')
       table.decimal('price', 20, 2).notNullable()
       table.json('comments')
       table.string('description', 255).notNullable()

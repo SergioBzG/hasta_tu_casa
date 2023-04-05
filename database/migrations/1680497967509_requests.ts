@@ -5,7 +5,7 @@ export default class Requests extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('request_code').primary()
+      table.increments('request_code')
       table.integer('time_limit').notNullable()
       table.string('address', 255).notNullable()
       table.string('comments', 255)

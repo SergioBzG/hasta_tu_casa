@@ -5,7 +5,7 @@ export default class FavoriteOffers extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').primary()
+      table.increments('id')
       table.string('client', 30).notNullable().references('phone').inTable('clients').onDelete('CASCADE')
       table.integer('offer').notNullable().references('id').inTable('offers').onDelete('CASCADE')
       table.timestamps(true)

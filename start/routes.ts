@@ -23,3 +23,18 @@ import Route from '@ioc:Adonis/Core/Route'
 Route.get('/', async () => {
   return { hello: 'world' }
 })
+
+Route.group(() => { //Routes for User
+  Route.post('/loginByPhone', 'UsersController.loginByPhone')
+  Route.post('/loginByEmail', 'UsersController.loginByEmail')
+  Route.get('/getUsers', 'UsersController.getUsers')
+  Route.get('/getUserByEmail/:email', 'UsersController.getUserByEmail')
+  Route.delete('/deleteUser/:id', 'UsersController.deleteUserByid')
+}).prefix('api/hastaTuCasa')
+
+Route.group(() => {//Routes for Client
+  Route.post('/createClient', 'ClientsController.createClient')
+  Route.get('/getClients', 'ClientsController.getClients')
+  Route.get('/getClientByEmail/:email', 'ClientsController.getClientByEmail')
+  Route.put('/updateClient/:id', 'ClientsController.updateClientById')
+}).prefix('api/hastaTuCasa')

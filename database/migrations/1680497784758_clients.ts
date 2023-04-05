@@ -5,7 +5,7 @@ export default class Clients extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').primary()
+      table.increments('id')
       table.string('phone', 30).unique().notNullable().references('phone').inTable('users').onDelete('CASCADE')
       table.string('payment_method', 100).notNullable()
       table.integer('level', 10).notNullable().defaultTo(0)

@@ -1,0 +1,47 @@
+Create Users:
+
+{
+    "phone": "3104975520",
+    "name": "Cassandra",
+    "email": "cass@uanl.edu.co",
+    "password": "cass",
+    "address": "CL 68 # 51",
+    "bank_account": "23434547742",
+    "role": "Admin"
+}
+
+{
+    "phone": "3104567832",
+    "name": "Sergio",
+    "email": "serch@uanl.edu.co",
+    "password": "serch",
+    "address": "CL 68 # 51",
+    "bank_account": "23434547742",
+    "role": "ServiceProvider"
+}
+
+Login by phone:
+
+{
+    "phone": 3104975520,
+    "password": "cass"
+}
+
+
+Login by email:
+{
+    "email": "cass@unal.edu.co",
+    "password": "cass"
+}
+
+
+Create Clients:
+
+{
+    "phone": "3145678345",
+    "name": "Carlos",
+    "email": "carlos@unal.edu.co",
+    "password": "carlos",
+    "address": "CL 68 # 51",
+    "payment_method": "Card" 
+}

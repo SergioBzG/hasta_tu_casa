@@ -5,7 +5,7 @@ export default class Bills extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').primary()
+      table.increments('id')
       table.decimal('payment_amount', 20, 2).notNullable()
       table.decimal('commission', 2, 2).notNullable()
       table.decimal('dibursed_amount', 20, 2).notNullable()

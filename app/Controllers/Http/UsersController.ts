@@ -6,37 +6,47 @@ import Env from '@ioc:Adonis/Core/Env'
 
 
 export default class UsersController {
-
-    public async createUser({request, response}: HttpContextContract): Promise<void>{
+    
+    //This function only is called from Clients and ServiceProviders Controller
+    public async createUser({phone,  name, email, password, address, bank_account, role}) {
         try{
-            const userData = request.only(['phone', 'name', 'password', 'email', 'address', 'state', 'bank_account', 'role']) 
-
-            if(await this.validateUserByPhone(userData.phone)){
-                return response.status(400).json({
+            if(await this.validateUserByPhone(phone)){
+                return {
                     state: false,
                     message: 'Already exists a user with this phone number'
-                })
+                }
             }
 
-            if(await this.validateUserByEmail(userData.email)){
-                return response.status(400).json({
+            if(await this.validateUserByEmail(email)){
+                return {
                     state: false,
                     message: 'Already exists a user with this email'
-                })
+                }
             }
 
             const salt = bcryptjs.genSaltSync(5)
-            userData.password = bcryptjs.hashSync(userData.password, salt);
-            await User.create(userData)
-            return response.status(200).json({
-                state: true,
-                messge: 'User created successfully'
+            password = bcryptjs.hashSync(password, salt);
+
+            await User.create({//Create user
+                phone,
+                name,
+                email,
+                password,
+                address,
+                bank_account,
+                role
             })
+
+            return {
+                state: true,
+                message: 'User created successfully'
+            }
+
         }catch(error){
-            return response.status(400).json({
+            return {
                 state: false,
                 message: error.message
-            })
+            }
         }
     }
 
@@ -58,6 +68,13 @@ export default class UsersController {
                     message: 'Incorrect password or phone'
                 })
             } 
+
+            if(!user.state){
+                return response.status(400).json({
+                    state: false,
+                    message: 'This user is inactive'
+                })
+            }
             
             const payload = {
                 name: user.name,
@@ -102,6 +119,13 @@ export default class UsersController {
                 })
             } 
             
+            if(!user.state){
+                return response.status(400).json({
+                    state: false,
+                    message: 'This user is inactive'
+                })
+            }
+
             const payload = {
                 name: user.name,
                 id: user.id,
@@ -112,7 +136,7 @@ export default class UsersController {
 
             return response.status(200).json({
                 state: true,
-                message: 'Login successfully',
+                message: 'Login successful',
                 name: user.name,
                 email: user.email,
                 token
@@ -129,7 +153,7 @@ export default class UsersController {
 
     public async getUsers({response}: HttpContextContract):Promise<void> {
         try{
-            const users: User[] = await User.query().where({state: true}).from('users').select('id', 'name', 'phone', 'email', 'address', 'state', 'role')
+            const users: User[] = await User.query().where({state: true}).from('users').select('id', 'name', 'phone', 'email', 'address', 'bank_account', 'role')
             return response.status(200).json({
                 state: true,
                 message: 'List of all users',
@@ -145,7 +169,13 @@ export default class UsersController {
 
     public async getUserByEmail({response, params}: HttpContextContract):Promise<void>{
         try{
-            const user:User[]  = await User.query().where({email: params.email}).from('user').select('id', 'name', 'phone', 'email', 'address', 'state', 'role')
+            const user:User[]  = await User.query().where({email: params.email}).from('users').select('id', 'name', 'phone', 'email', 'address', 'bank_account', 'state', 'role')
+            if(!user[0]){
+                return response.status(400).json({
+                    state:false,
+                    message: 'User not found'
+                })
+            }
             return response.status(200).json({
                 state: true,
                 user: user[0]
@@ -158,50 +188,51 @@ export default class UsersController {
         }
     }
 
-    public async updateUserById({request, response, params}: HttpContextContract):Promise<void>{
+    public async updateUserById({id, name, email, password, address, bank_account, state}) {
         try{
-            const user:User = await User.findOrFail(params.id)
-            const [phone, email] = [request.input('phone'), request.input('email')]
-            if(await this.validateUserByPhone(phone)){
-                return response.status(400).json({
-                    state: false,
-                    message: 'Already exists a user with this phone number'
-                })
-            }
-
-            if(await this.validateUserByEmail(email)){
-                return response.status(400).json({
+            //The phone atributte is not going to be updated because it is a foriegn key
+            const user:User = await User.findOrFail(id)
+            const userByEmail:any = await this.validateUserByEmail(email)
+    
+            //If user going to update the email and verify that there isn't other user with them
+            if(userByEmail && userByEmail.id !== user.id){
+                return {
                     state: false,
                     message: 'Already exists a user with this email'
-                })
+                }
             }
+
             const salt = bcryptjs.genSaltSync(5);
-            user.phone = phone
-            user.name = request.input('name')
-            user.password = bcryptjs.hashSync(request.input('password'), salt)
-            user.email = request.input('email')
-            user.address = request.input('address')
-            user.state = request.input('state')
-            user.bank_account = request.input('bank_account')
+            user.name = name
+            user.email = email
+            user.password = bcryptjs.hashSync(password, salt)
+            user.address = address
+            user.bank_account = bank_account
+            user.state = state
             await user.save()
-            return response.status(200).json({
+
+            return {
                 state: true,
                 message: 'User updated successfully'
-            })
+            }
 
         }catch(error){
-            return response.status(400).json({
+            return {
                 state: false,
                 message: error.message
-            })
+            }
         }
     }
 
     public async deleteUserByid({response, params}: HttpContextContract):Promise<void>{
         try{
-            const user:any = User.findOrFail(params.id)
+            const user:any = await User.findOrFail(params.id)
             user.state = false
             await user.save()
+            return response.status(200).json({
+                state: true,
+                message: 'User deleted successfully'
+            })
         }catch(error){
             return response.status(400).json({
                 state: false,
