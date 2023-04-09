@@ -8,10 +8,14 @@ export default class Bill extends BaseModel {
   @column() public commission: number
   @column() public dibursed_amount: number
   @column() public purchase: number
+  @column() public state: boolean
 
   @column.dateTime({ autoCreate: true }) public createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true }) public updatedAt: DateTime
 
-  @belongsTo(() => Purchase)
+  @belongsTo(() => Purchase,{
+    localKey: 'id',
+    foreignKey: 'purchase' 
+  })
   public purchases: BelongsTo<typeof Purchase>
 }

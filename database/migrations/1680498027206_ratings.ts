@@ -11,6 +11,7 @@ export default class Ratings extends BaseSchema {
       table.integer('customer_service').notNullable()
       table.string('client', 30).notNullable().references('phone').inTable('clients').onDelete('CASCADE')
       table.integer('offer').notNullable().references('id').inTable('offers').onDelete('CASCADE')
+      table.boolean('state').defaultTo(true)
       table.timestamps(true)
     })
   }

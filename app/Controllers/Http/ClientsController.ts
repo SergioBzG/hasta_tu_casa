@@ -3,10 +3,11 @@ import UsersController from './UsersController'
 import Client from 'App/Models/Client'
 import Database from '@ioc:Adonis/Lucid/Database'
 import User from 'App/Models/User'
+import RequestsController from './RequestsController'
 
 export default class ClientsController {
 
-    public async createClient({request, response}: HttpContextContract){
+    public async createClient({request, response}: HttpContextContract):Promise<void>{
         try{
             const userData = request.only(['phone', 'name', 'password', 'email', 'address', 'bank_account', 'role'])
             userData.role = 'Client' //Role of the user
@@ -32,7 +33,7 @@ export default class ClientsController {
         }
     }
 
-    public async getClients({response}: HttpContextContract){
+    public async getClients({response}: HttpContextContract):Promise<void>{
         try{
             const clients = await Database
             .from('users')
@@ -54,7 +55,7 @@ export default class ClientsController {
         }
     }
 
-    public async getClientByEmail({response, params}: HttpContextContract){
+    public async getClientByEmail({response, params}: HttpContextContract):Promise<void>{
         try{
             const client:Object[] = await Database
             .from('users')
@@ -71,8 +72,6 @@ export default class ClientsController {
 
             return response.status(200).json({
                 state: true,
-                message: 'List of clients',
-                type: typeof client[0],
                 client: client[0]
             })
 
@@ -84,7 +83,7 @@ export default class ClientsController {
         }
     }
 
-    public async updateClientById({request, response, params}: HttpContextContract){
+    public async updateClientById({request, response, params}: HttpContextContract):Promise<void>{
         try{
             const user:User[] = await User.query().where({id: params.id}).preload('client')
             const client:Client = user[0].client
@@ -120,8 +119,23 @@ export default class ClientsController {
         }
     }
     
-    public async makeRequest({response}: HttpContextContract):Promise<void>{
+    public async makeRequest({request, response}: HttpContextContract):Promise<void>{
         try{
+            const authorizationHeader:any = request.header('Authorization')
+            //Get client phone from token
+            const {phone} = await UsersController.getPayload(authorizationHeader)
+            const requestData = request.only(['time_limit', 'address', 'comments', 'date', 'state', 'client', 'offers'])
+
+            //Create request
+            requestData.state = 'pending'
+            requestData.client = phone
+            const requestControl = new RequestsController()
+            const responseFromRequest = await requestControl.createRequest(requestData)
+            if(!responseFromRequest.state){
+                return response.status(400).json(responseFromRequest)
+            }
+
+            return response.status(200).json(responseFromRequest)
 
         }catch(error){
             return response.status(400).json({

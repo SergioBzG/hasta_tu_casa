@@ -79,7 +79,8 @@ export default class UsersController {
             const payload = {
                 name: user.name,
                 id: user.id,
-                email: user.email
+                email: user.email,
+                phone: user.phone
             }
 
             const token:string = this.createToken(payload)
@@ -129,7 +130,8 @@ export default class UsersController {
             const payload = {
                 name: user.name,
                 id: user.id,
-                email: user.email
+                email: user.email,
+                phone: user.phone
             }
 
             const token:string = this.createToken(payload)

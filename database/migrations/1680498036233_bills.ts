@@ -10,6 +10,7 @@ export default class Bills extends BaseSchema {
       table.decimal('commission', 2, 2).notNullable()
       table.decimal('dibursed_amount', 20, 2).notNullable()
       table.integer('purchase').unique().notNullable().references('id').inTable('purchases').onDelete('CASCADE')
+      table.boolean('state').defaultTo(true)
       table.timestamps(true)
     })
   }

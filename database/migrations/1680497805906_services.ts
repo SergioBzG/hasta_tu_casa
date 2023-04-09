@@ -9,8 +9,8 @@ export default class Services extends BaseSchema {
       table.string('name', 255).unique().notNullable()
       table.string('category', 255).notNullable()
       table.decimal('commission', 2, 2).notNullable()
+      table.boolean('state').defaultTo(true)
       table.timestamps(true)
-
     })
   }
 

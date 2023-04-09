@@ -7,6 +7,7 @@ export default class Service extends BaseModel {
   @column() public name: string
   @column() public category: string
   @column() public commission: number
+  @column() public state: boolean
 
   @column.dateTime({ autoCreate: true }) public createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true }) public updatedAt: DateTime

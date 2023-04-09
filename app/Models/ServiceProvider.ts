@@ -16,12 +16,15 @@ export default class ServiceProvider extends BaseModel {
   @column.dateTime({ autoCreate: true }) public createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true }) public updatedAt: DateTime
 
- @belongsTo(() => User)
+ @belongsTo(() => User, {
+  localKey: 'phone',
+  foreignKey: 'phone'
+ })
  public user: BelongsTo<typeof User>
 
  @hasMany(() => Offer,{
   localKey: 'phone',
   foreignKey: 'service_provider'
 })
-public oferrs: HasMany<typeof Offer>
+public offers: HasMany<typeof Offer>
 }

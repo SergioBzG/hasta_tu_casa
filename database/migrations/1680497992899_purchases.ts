@@ -8,6 +8,7 @@ export default class Purchases extends BaseSchema {
       table.increments('id')
       table.integer('offer').notNullable().references('id').inTable('offers').onDelete('CASCADE')
       table.integer('request').notNullable().references('request_code').inTable('requests').onDelete('CASCADE')
+      table.boolean('state').defaultTo(true)
       table.timestamps(true)
     })
   }

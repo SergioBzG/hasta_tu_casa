@@ -11,6 +11,7 @@ export default class Offers extends BaseSchema {
       table.string('description', 255).notNullable()
       table.string('service', 255).notNullable().references('name').inTable('services').onDelete('CASCADE')
       table.string('service_provider', 30).notNullable().references('phone').inTable('service_providers').onDelete('CASCADE')
+      table.boolean('state').defaultTo(true)
       table.timestamps(true)
     })
   }
