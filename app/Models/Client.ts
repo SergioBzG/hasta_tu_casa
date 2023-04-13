@@ -33,7 +33,7 @@ export default class Client extends BaseModel {
     localKey: 'phone',
     foreignKey: 'client'
   })
-  public resquests: HasMany<typeof Request>
+  public requests: HasMany<typeof Request>
 
   @hasMany(() => Rating, {
     localKey: 'phone',

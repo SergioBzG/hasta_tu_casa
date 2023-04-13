@@ -6,9 +6,9 @@ import Bill from './Bill'
 
 export default class Purchase extends BaseModel {
   @column({ isPrimary: true }) public id: number
+  @column() public state: string
   @column() public offer: number
   @column() public request: number
-  @column() public state: boolean
 
   @column.dateTime({ autoCreate: true }) public createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true }) public updatedAt: DateTime

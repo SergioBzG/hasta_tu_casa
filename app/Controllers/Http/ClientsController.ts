@@ -3,6 +3,7 @@ import UsersController from './UsersController'
 import Client from 'App/Models/Client'
 import Database from '@ioc:Adonis/Lucid/Database'
 import User from 'App/Models/User'
+import PurchasesController from './PurchasesController'
 import RequestsController from './RequestsController'
 
 export default class ClientsController {
@@ -124,10 +125,9 @@ export default class ClientsController {
             const authorizationHeader:any = request.header('Authorization')
             //Get client phone from token
             const {phone} = await UsersController.getPayload(authorizationHeader)
-            const requestData = request.only(['time_limit', 'address', 'comments', 'date', 'state', 'client', 'offers'])
+            const requestData = request.only(['time_limit', 'address', 'comments', 'date', 'client', 'offers'])
 
             //Create request
-            requestData.state = 'pending'
             requestData.client = phone
             const requestControl = new RequestsController()
             const responseFromRequest = await requestControl.createRequest(requestData)
@@ -137,6 +137,52 @@ export default class ClientsController {
 
             return response.status(200).json(responseFromRequest)
 
+        }catch(error){
+            return response.status(400).json({
+                state: false,
+                message: error.message
+            })
+        }
+    }
+
+    public async seeMyRequests({request, response}: HttpContextContract):Promise<void>{
+        try{
+            //Get client phone from token
+            const token:any = await request.header('Authorization')
+            const { phone } = await UsersController.getPayload(token)
+            const client = await Client.query().where({phone}).preload('requests', requestQuery => {
+                requestQuery.select('request_code', 'time_limit', 'address', 'comments', 'date').preload('purchases', purchaseQuery => {
+                    purchaseQuery.select('state', 'offer').preload('offers', offerQuery => {
+                        offerQuery.select('id', 'price', 'description', 'service_provider', 'state')
+                    })
+                })
+            })
+            const myRequests = client[0].requests
+
+            return response.status(200).json({
+                state: true,
+                message: 'List of my requests',
+                myRequests
+            })
+        }catch(error){
+            return response.status(400).json({
+                state: false,
+                message: error.message
+            })
+        }
+    }
+
+    public async cancelPurchase({response, params}: HttpContextContract):Promise<void>{
+        try{
+            const [request, offer] = params['*']
+            const purchaseControl = new PurchasesController()
+            const responseFromPurchase = await purchaseControl.changeState(request, offer, 'canceled')
+
+            if(!responseFromPurchase.state){
+                return response.status(400).json(responseFromPurchase)
+            }
+
+            return response.status(200).json(responseFromPurchase)
         }catch(error){
             return response.status(400).json({
                 state: false,

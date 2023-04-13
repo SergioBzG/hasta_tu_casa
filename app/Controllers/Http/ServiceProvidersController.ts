@@ -3,6 +3,7 @@ import UsersController from './UsersController'
 import ServiceProvider from 'App/Models/ServiceProvider'
 import Database from '@ioc:Adonis/Lucid/Database'
 import User from 'App/Models/User'
+import PurchasesController from './PurchasesController'
 
 export default class ServiceProvidersController {
 
@@ -130,10 +131,21 @@ export default class ServiceProvidersController {
             const token:any = request.header('authorization')
             const { phone } = await UsersController.getPayload(token)
             const myRequests = await ServiceProvider.query().where({phone : phone}).preload('offers', offersQuery => {
-                offersQuery.select('id', 'price', 'description', 'service').preload('requests', requestsQuery => {
-                    requestsQuery.select('request_code', 'time_limit', 'address', 'comments', 'date', 'state', 'client')
+                offersQuery.select('id', 'price', 'description', 'service').preload('purchases', purchasesQuery => {
+                    purchasesQuery.select('state', 'request').whereIn('state', ['pending', 'accepted', 'rejected']).preload('requests', requestQuery => {
+                        requestQuery.select('time_limit', 'address', 'comments', 'date', 'client')
+                    })
                 })
             })
+
+            // const myRequests:Object[] = await Database
+            // .from('service_providers')
+            // .join('offers', 'service_providers.phone', '=', 'offers.service_provider')
+            // .join('purchases', 'offers.id', '=', 'purchases.offer')
+            // .join('requests', 'purchases.request', '=', 'requests.request_code')
+            // .where({service_provider: phone})
+            // .whereIn('purchases.state', ['pending', 'accepted', 'rejected])
+            // .select('offers.id', 'offers.price', 'offers.description', 'offers.service', 'requests.request_code', 'purchases.state', 'requests.time_limit', 'requests.address', 'requests.comments', 'requests.date', 'requests.client')
 
             const myOffersRequested = myRequests[0].offers
 
@@ -144,6 +156,79 @@ export default class ServiceProvidersController {
             })
 
 
+        }catch(error){
+            return response.status(400).json({
+                state: false,
+                message: error.message
+            })
+        }
+    }
+
+    public async seeMyOffers({request, response}: HttpContextContract):Promise<void>{
+        try{
+            //Get service provider phone from token
+            const token:any = request.header('Authorization')
+            const { phone } = await UsersController.getPayload(token)
+            const serviceProvider = await ServiceProvider.findBy('phone', phone)
+
+            const myOffers = await serviceProvider?.related('offers').query()
+
+            return response.status(200).json({
+                state: true,
+                message: 'List of my offers',
+                myOffers
+            })
+
+        }catch(error){
+            return response.status(400).json({
+                state: false,
+                message: error.message
+            })
+        }
+    }
+
+    public async acceptPurchase({request, response, params}: HttpContextContract){
+        try{
+            //Get service provider phone from token
+            const [request_code, offer] = params['*']
+
+            const token:any = request.header('Authorization')
+            const { phone } = await UsersController.getPayload(token)
+            const serviceProvider:ServiceProvider[] = await ServiceProvider.query().where({phone: phone}).preload('offers', offersQuery => {
+                offersQuery.where({id : offer}).preload('services')
+            })
+            
+            const payment_amount:number = serviceProvider[0].offers[0].price
+            const commission:number = serviceProvider[0].offers[0].services.commission
+            const dibursed_amount:number = payment_amount*(1-commission) 
+
+            const purchaseControl = new PurchasesController()
+            const responseFromPurchase = await purchaseControl.changeState(request_code, offer, 'accepted', payment_amount, commission, dibursed_amount)
+
+            if(!responseFromPurchase.state){
+                return response.status(400).json(responseFromPurchase)
+            }
+
+            return response.status(200).json(responseFromPurchase)
+        }catch(error){
+            return response.status(400).json({
+                state: false,
+                message: error.message
+            })
+        }
+    }
+
+    public async rejectPurchase({response, params}: HttpContextContract):Promise<void>{
+        try{
+            const [request_code, offer] = params['*']
+            const purchaseControl = new PurchasesController()
+            const responseFromPurchase = await purchaseControl.changeState(request_code, offer, 'rejected')
+
+            if(!responseFromPurchase.state){
+                return response.status(400).json(responseFromPurchase)
+            }
+
+            return response.status(200).json(responseFromPurchase)
         }catch(error){
             return response.status(400).json({
                 state: false,

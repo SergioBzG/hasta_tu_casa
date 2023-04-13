@@ -4,6 +4,7 @@ import Service from './Service'
 import ServiceProvider from './ServiceProvider'
 import Rating from './Rating'
 import Request from './Request'
+import Purchase from './Purchase'
 
 export default class Offer extends BaseModel {
   @column({ isPrimary: true }) public id: number
@@ -43,4 +44,10 @@ export default class Offer extends BaseModel {
     pivotRelatedForeignKey: 'request'
   })
   public requests: ManyToMany<typeof Request>
+
+  @hasMany(() => Purchase, {
+    localKey: 'id',
+    foreignKey: 'offer'
+  })
+  public purchases: HasMany<typeof Purchase>
 }

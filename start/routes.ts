@@ -42,9 +42,11 @@ Route.group(() => {//Routes for Client
   Route.get('/getClientByEmail/:email', 'ClientsController.getClientByEmail')
   Route.put('/updateClient/:id', 'ClientsController.updateClientById')
   Route.post('/makeRequest', 'ClientsController.makeRequest')
+  Route.get('/seeMyRequests', 'ClientsController.seeMyRequests')
+  Route.put('/cancelPurchase/*', 'ClientsController.cancelPurchase')
   Route.get('/getFavoriteOffers', 'ClientsController.getFavoriteOffers')
   Route.post('/rateOffer', 'ClientsController.rateOffer')
-}).prefix('api/hastaTuCasa')
+}).prefix('api/hastaTuCasa/client')
 
 Route.group(() => {//Routes for ServiceProvider
   Route.post('/createServiceProvider', 'ServiceProvidersController.createServiceProvider')
@@ -52,6 +54,9 @@ Route.group(() => {//Routes for ServiceProvider
   Route.get('/getServiceProviderByEmail/:email', 'ServiceProvidersController.getServiceProviderByEmail')
   Route.put('/updateServiceProvider/:id', 'ServiceProvidersController.updateServiceProviderById')
   Route.get('/seeMyRequests', 'ServiceProvidersController.seeMyRequests')
+  Route.get('/seeMyOffers', 'ServiceProvidersController.seeMyOffers')
+  Route.put('/acceptPurchase/*', 'ServiceProvidersController.acceptPurchase')
+  Route.put('/rejectPurchase/*', 'ServiceProvidersController.rejectPurchase')
 }).prefix('api/hastaTuCasa')
 
 Route.group(() => {//Routes for Service
@@ -74,6 +79,15 @@ Route.group(() => {//Routes for Requests
   Route.get('/getRequests', 'RequestsController.getRequests')
   Route.get('/getRequestByCode/:code', 'RequestsController.getRequestByCode')
   Route.get('/getRequestByClient/:client', 'RequestsController.getRequestByClient')
-  Route.get('/getRequestByState/:state', 'RequestsController.getRequestByState')
   Route.get('/getOffersByRequest/:code', 'RequestsController.getOffersByRequest')
 }).prefix('api/hastaTuCasa')
+
+Route.group(() => {//Routes for Purchases
+  Route.get('/getPurchases', 'PurchasesController.getPurchases')
+  Route.get('/getPurchaseById/:id', 'PurchasesController.getPurchaseById')
+  Route.get('/getPurchaseByState/:state', 'PurchasesController.getPurchaseByState')
+}).prefix('api/hastaTuCasa')
+
+Route.group(() => {//Routes for Bills
+
+})

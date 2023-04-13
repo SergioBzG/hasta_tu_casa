@@ -4,14 +4,13 @@ import PurchasesController from './PurchasesController'
 
 export default class RequestsController {
 
-    public async createRequest({time_limit, address, comments, date, state, client, offers}){
+    public async createRequest({time_limit, address, comments, date, client, offers}){
         try{
             const request:Request = await Request.create({//Create request
                 time_limit,
                 address,
                 comments,
                 date,
-                state,
                 client
             })
 
@@ -92,23 +91,6 @@ export default class RequestsController {
         }
     }
 
-    public async getRequestByState({response, params}: HttpContextContract):Promise<void>{
-        try{
-            const requests:Request[] = await Request.query().where({state : params.state}).from('requests')
-
-            return response.status(200).json({
-                state: true,
-                message: `List of requests with state ${params.state}`,
-                requests
-            })
-        }catch(error){
-            return response.status(400).json({
-                state: false,
-                message: error.message
-            })
-        }
-    }
-
     public async getOffersByRequest({response, params}: HttpContextContract):Promise<void>{
         try{
             const request = await Request.find(params.code)
@@ -120,7 +102,6 @@ export default class RequestsController {
                 })
             }
             const offers = await request.related('offers').query()
-            // const offers = request.offers
             return response.status(200).json({
                 state: true,
                 message: 'List of offers',
@@ -133,4 +114,6 @@ export default class RequestsController {
             })
         }
     }
+
+
 }

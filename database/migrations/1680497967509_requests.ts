@@ -10,7 +10,6 @@ export default class Requests extends BaseSchema {
       table.string('address', 255).notNullable()
       table.string('comments', 255)
       table.date('date').notNullable()
-      table.enum('state', ['pending', 'accepted', 'rejected', 'expired', 'canceled']).notNullable()
       table.string('client', 30).notNullable().references('phone').inTable('clients').onDelete('CASCADE')
       table.timestamps(true)
     })
