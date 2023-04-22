@@ -15,9 +15,15 @@ export default class Rating extends BaseModel {
   @column.dateTime({ autoCreate: true }) public createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true }) public updatedAt: DateTime
 
-  @belongsTo(() => Client)
+  @belongsTo(() => Client, {
+    localKey: 'phone',
+    foreignKey: 'client'
+  })
   public clients: BelongsTo<typeof Client>
 
-  @belongsTo(() => Offer)
+  @belongsTo(() => Offer, {
+    localKey: 'id',
+    foreignKey: 'offer'
+  })
   public offers: BelongsTo<typeof Offer>
 }

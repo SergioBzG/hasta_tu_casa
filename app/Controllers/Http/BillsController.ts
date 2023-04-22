@@ -42,4 +42,26 @@ export default class BillsController {
         }
    }
 
+   public async getBillByPurchase({response, params}: HttpContextContract):Promise<void>{
+    try{
+        const bill:any = await Bill.findBy('purchase', params.purchase)
+        if(!bill){
+            return response.status(400).json({
+                state: true,
+                message: 'Bill not found'
+            })
+        }
+
+        return response.status(200).json({
+            state: true,
+            bill
+        })
+    }catch(error){
+        return response.status(400).json({
+            state: true,
+            message: error.message
+        })
+    }
+   }
+
 }

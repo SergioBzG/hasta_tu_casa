@@ -5,6 +5,11 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import User from 'App/Models/User'
 import PurchasesController from './PurchasesController'
 import RequestsController from './RequestsController'
+import Request from 'App/Models/Request'
+import RatingsController from './RatingsController'
+import FavoriteOffersController from './FavoriteOffersController'
+import OffersController from './OffersController'
+import Offer from 'App/Models/Offer'
 
 export default class ClientsController {
 
@@ -191,8 +196,101 @@ export default class ClientsController {
         }
     }
 
-    public async getFavoriteOffers({response}: HttpContextContract):Promise<void>{
+    public async addFavoriteOffer({request, response, params}: HttpContextContract):Promise<void>{
+        //Get client phone from token
+        const authorizationHeader:any = await request.header('Authorization')
+        const { phone } = await UsersController.getPayload(authorizationHeader)
+        const favoriteOfferControl = new FavoriteOffersController()
+        const responseFromFavoriteOffer = await favoriteOfferControl.createFavoriteOffer(phone, params.offer)
+
+        if(!responseFromFavoriteOffer.state){
+            return response.status(400).json(responseFromFavoriteOffer)
+        }
+
+        return response.status(200).json({
+            state: true,
+            message: 'Offer added to favorites'
+        })
+
+    }
+
+    public async getFavoriteOffers({request, response}: HttpContextContract):Promise<void>{
         try{
+            //Get client phone from token
+            const authorizationHeader:any = await request.header('Authorization')
+            const { phone } = await UsersController.getPayload(authorizationHeader)
+            const client:any = await Client.findByOrFail('phone', phone)
+            const favoriteOffers = await client.related('offers').query()
+
+            return response.status(200).json({
+                state: true,
+                message: 'List of favorite offers',
+                favoriteOffers
+            })
+        }catch(error){
+            return response.status(400).json({
+                state: false,
+                message: error.message
+            })
+        }
+    }
+
+    public async rateOffer({request, response, params}: HttpContextContract):Promise<void>{
+        try{
+            //Fisrt I should verify if that offer (params.offer) has been requested by client, and if the service provider has accepted it. Only in this case the client can rate the offer
+            const token:any = await request.header('Authorization')
+            const {phone} = await UsersController.getPayload(token)
+            const verify:boolean = await this.verifyRateOffer(phone, params.offer)
+
+            if(!verify){
+                return response.status(400).json({
+                    state: false,
+                    message: 'You can not rate this offer'
+                })
+            }
+
+            const ratingData = request.only(['efficiency', 'efficacy', 'customer_service', 'offer', 'client'])
+
+            ratingData.offer = params.offer
+            ratingData.client = phone
+
+            const ratingControl = new RatingsController()
+            const responseFromRating = await ratingControl.createRating(ratingData)
+
+            if(!responseFromRating.state){
+                return response.status(400).json(responseFromRating)
+            }
+
+            //Get money to transfer to service provider
+
+            let dibursedAmount = await Database.
+            from('bills')
+            .where('purchase', 
+                Database.from('purchases')
+                .where('offer', params.offer)
+                .where('request', 
+                    Database.from('requests')
+                    .where('client', phone)
+                    .select('request_code')
+                    )
+                .where('state', 'accepted')
+                .select('id')
+                )
+            .select('dibursed_amount')
+
+            //Then money is transferred from client to service provider
+            const offer = await Offer.find(params.offer)
+            const ServiceProvider = await offer?.related('serviceProvider').query()
+
+            if(ServiceProvider){
+                ServiceProvider[0].income = (+ServiceProvider[0].income) + (+dibursedAmount[0].dibursed_amount)
+                await ServiceProvider[0].save()
+            }
+
+            return response.status(200).json({
+                state: true,
+                message: 'Offer rated successfully'
+            })
 
         }catch(error){
             return response.status(400).json({
@@ -202,16 +300,44 @@ export default class ClientsController {
         }
     }
 
-    public async rateOffer({response}: HttpContextContract):Promise<void>{
-        try{
+    public async commentOffer({request, response, params}: HttpContextContract):Promise<void>{
+        const authorizationHeader:any = await request.header('Authorization')
+        const {phone} = await UsersController.getPayload(authorizationHeader)
+        //To comment an offer, the client must have requested it and the service provider must have accepted it
+        const verify:boolean = await this.verifyRateOffer(phone, params.offer)
 
-        }catch(error){
+        if(!verify){
             return response.status(400).json({
                 state: false,
-                message: error.message
+                message: 'You can not comment this offer'
             })
         }
+
+        const offerControl = new OffersController()
+        const responseFromOffer = await offerControl.addComment(request.input('comment'), params.offer) 
+
+        if(!responseFromOffer.state){
+            return response.status(400).json(responseFromOffer)
+        }
+
+        return response.status(200).json({
+            state: true,
+            message: 'Offer commented successfully'
+        })
+
     }
 
+    private async verifyRateOffer(phone:string, offer:number):Promise<boolean>{
+
+        const client:Request[] = await Request.query().where({client: phone})
+        if (client.length === 0) {
+            return false
+        }
+        const purchaseClient:Request[] = await Request.query().where({client: phone}).preload('purchases', purchaseQuery => {
+            purchaseQuery.where({offer: offer}).where({state: 'accepted'})
+        })
+
+        return purchaseClient[0].purchases[0] ? true : false
+    }
 
 }

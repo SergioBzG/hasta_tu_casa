@@ -27,9 +27,9 @@ Route.get('/', async () => {
 Route.group(() => { //Routes for User
   Route.post('/loginByPhone', 'UsersController.loginByPhone')
   Route.post('/loginByEmail', 'UsersController.loginByEmail')
-  Route.get('/getUsers', 'UsersController.getUsers')
-  Route.get('/getUserByEmail/:email', 'UsersController.getUserByEmail')
-  Route.delete('/deleteUser/:id', 'UsersController.deleteUserByid')
+  Route.get('/getUsers', 'UsersController.getUsers').middleware(['auth', 'admin'])
+  Route.get('/getUserByEmail/:email', 'UsersController.getUserByEmail').middleware(['auth', 'admin'])
+  Route.delete('/deleteUser/:id', 'UsersController.deleteUserByid').middleware(['auth', 'admin'])
 }).prefix('api/hastaTuCasa')
 
 Route.group(() => {//Routes for Admin
@@ -44,9 +44,11 @@ Route.group(() => {//Routes for Client
   Route.post('/makeRequest', 'ClientsController.makeRequest')
   Route.get('/seeMyRequests', 'ClientsController.seeMyRequests')
   Route.put('/cancelPurchase/*', 'ClientsController.cancelPurchase')
+  Route.get('/addFavoriteOffer/:offer', 'ClientsController.addFavoriteOffer')
   Route.get('/getFavoriteOffers', 'ClientsController.getFavoriteOffers')
-  Route.post('/rateOffer', 'ClientsController.rateOffer')
-}).prefix('api/hastaTuCasa/client')
+  Route.post('/rateOffer/:offer', 'ClientsController.rateOffer')
+  Route.post('/commentOffer/:offer', 'ClientsController.commentOffer')
+}).prefix('api/hastaTuCasa/client').middleware(['auth', 'client'])
 
 Route.group(() => {//Routes for ServiceProvider
   Route.post('/createServiceProvider', 'ServiceProvidersController.createServiceProvider')
@@ -57,37 +59,43 @@ Route.group(() => {//Routes for ServiceProvider
   Route.get('/seeMyOffers', 'ServiceProvidersController.seeMyOffers')
   Route.put('/acceptPurchase/*', 'ServiceProvidersController.acceptPurchase')
   Route.put('/rejectPurchase/*', 'ServiceProvidersController.rejectPurchase')
-}).prefix('api/hastaTuCasa')
+}).prefix('api/hastaTuCasa').middleware(['auth', 'serviceProvider'])
 
 Route.group(() => {//Routes for Service
-  Route.post('/createService', 'ServicesController.createService')
+  Route.post('/createService', 'ServicesController.createService').middleware('admin')
   Route.get('/getServices', 'ServicesController.getServices')
   Route.get('/getServiceByName/:name', 'ServicesController.getServiceByName')
-  Route.put('/updateService/:id', 'ServicesController.updateServiceById')
-  Route.delete('/deleteService/:id', 'ServicesController.deleteServiceById')
-}).prefix('api/hastaTuCasa')
+  Route.put('/updateService/:id', 'ServicesController.updateServiceById').middleware('admin')
+  Route.delete('/deleteService/:id', 'ServicesController.deleteServiceById').middleware('admin')
+}).prefix('api/hastaTuCasa').middleware('auth')
 
 Route.group(() => {//Routes for Offer
-  Route.post('/createOffer', 'OffersController.createOffer')
+  Route.post('/createOffer', 'OffersController.createOffer').middleware('serviceProvider')
   Route.get('/getOffers', 'OffersController.getOffers')
   Route.get('/getOfferById/:id', 'OffersController.getOfferById')
-  Route.put('/updateOffer/:id', 'OffersController.updateOfferById')
-  Route.delete('/deleteOffer/:id', 'OffersController.deleteOfferById')
-}).prefix('api/hastaTuCasa')
+  Route.put('/updateOffer/:id', 'OffersController.updateOfferById').middleware('serviceProvider')
+  Route.delete('/deleteOffer/:id', 'OffersController.deleteOfferById').middleware('serviceProvider')
+}).prefix('api/hastaTuCasa').middleware('auth')
 
 Route.group(() => {//Routes for Requests
   Route.get('/getRequests', 'RequestsController.getRequests')
   Route.get('/getRequestByCode/:code', 'RequestsController.getRequestByCode')
   Route.get('/getRequestByClient/:client', 'RequestsController.getRequestByClient')
   Route.get('/getOffersByRequest/:code', 'RequestsController.getOffersByRequest')
-}).prefix('api/hastaTuCasa')
+}).prefix('api/hastaTuCasa').middleware(['auth', 'admin'])
 
 Route.group(() => {//Routes for Purchases
   Route.get('/getPurchases', 'PurchasesController.getPurchases')
   Route.get('/getPurchaseById/:id', 'PurchasesController.getPurchaseById')
   Route.get('/getPurchaseByState/:state', 'PurchasesController.getPurchaseByState')
-}).prefix('api/hastaTuCasa')
+  Route.get('/getBillPurchase/:id', 'PurchasesController.getBillPurchase')
+}).prefix('api/hastaTuCasa').middleware(['auth', 'admin'])
 
 Route.group(() => {//Routes for Bills
+  Route.get('/getBills', 'BillsController.getBills')
+  Route.get('/getBillByPurchase/:purchase', 'BillsController.getBillByPurchase')
+}).prefix('api/hastaTuCasa').middleware(['auth', 'admin'])
 
-})
+Route.group(() => {//Routes for Ratings
+  Route.get('/getRatings', 'RatingsController.getRatings')
+}).prefix('api/hastaTuCasa').middleware(['auth', 'admin'])

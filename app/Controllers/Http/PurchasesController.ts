@@ -92,6 +92,23 @@ export default class PurchasesController {
         }
     }
 
+    public async getBillPurchase({response, params}: HttpContextContract):Promise<void>{
+        try{
+            const purchase:Purchase[] = await Purchase.query().where({id: params.id}).where({state: 'accepted'}).from('purchases').select('id', 'offer', 'request').preload('bill')
+
+            return response.status(200).json({
+                state: true,
+                purchase
+            })
+
+        }catch(error){
+            return response.status(400).json({
+                state: false,
+                message: error.message
+            })
+        }
+    }
+
     public async changeState(request: number, offer: number, state: string, payment_amount = 0, commission = 0, dibursed_amount = 0) {
         try{
             const purchase:Purchase[] = await Purchase.query().where({request: request}).where({offer: offer}).from('purchases')

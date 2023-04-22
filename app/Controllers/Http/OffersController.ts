@@ -130,6 +130,28 @@ export default class OffersController {
         }
     }
 
+    public async addComment(comment, offerId:number){
+        try{
+            const offer:any = await Offer.findOrFail(offerId)
+            if(!offer.comments){
+                offer.comments = comment
+                await offer.save()
+            }else{
+                offer.comments.comments.push(comment.comments[0])
+                await offer.save()
+            }
+            return {
+                state: true,
+                message: 'Comment added successfully'
+            }
+        }catch(error){
+            return {
+                state: false,
+                message: error.message
+            }                                                               
+        }
+    }
+
     private async validateOffer(service:string, serviceProvider:string): Promise<boolean>{
         //First verify if the service provider exists
         if(await ServiceProvider.findBy('phone', serviceProvider)){

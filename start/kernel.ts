@@ -41,4 +41,8 @@ Server.middleware.register([
 |
 */
 Server.middleware.registerNamed({
+  auth: () => import('App/Middleware/AuthJwt'),
+  admin: () => import('App/Middleware/VerifyAdmin'),
+  client: () => import('App/Middleware/VerifyClient'),
+  serviceProvider: () => import('App/Middleware/VerifyServiceProvider')
 })

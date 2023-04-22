@@ -254,7 +254,7 @@ export default class UsersController {
         const token:string = authorizationHeader.split(' ')[1];
         jwt.verify(token, Env.get('JWT_SECRET_KEY'), (error) => {
             if(error){
-                throw new Error('Token expirado');
+                throw new Error('Token expired');
             }
         })
         return true
