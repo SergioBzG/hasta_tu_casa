@@ -238,9 +238,10 @@ export default class ClientsController {
     public async rateOffer({request, response, params}: HttpContextContract):Promise<void>{
         try{
             //Fisrt I should verify if that offer (params.offer) has been requested by client, and if the service provider has accepted it. Only in this case the client can rate the offer
+            const [requestCode, offerId] = params['*']
             const token:any = await request.header('Authorization')
             const {phone} = await UsersController.getPayload(token)
-            const verify:boolean = await this.verifyRateOffer(phone, params.offer)
+            const verify:boolean = await this.verifyRateOffer(phone, offerId)
 
             if(!verify){
                 return response.status(400).json({
@@ -251,7 +252,7 @@ export default class ClientsController {
 
             const ratingData = request.only(['efficiency', 'efficacy', 'customer_service', 'offer', 'client'])
 
-            ratingData.offer = params.offer
+            ratingData.offer = offerId
             ratingData.client = phone
 
             const ratingControl = new RatingsController()
@@ -267,19 +268,15 @@ export default class ClientsController {
             from('bills')
             .where('purchase', 
                 Database.from('purchases')
-                .where('offer', params.offer)
-                .where('request', 
-                    Database.from('requests')
-                    .where('client', phone)
-                    .select('request_code')
-                    )
+                .where('offer', offerId)
+                .where('request', requestCode)
                 .where('state', 'accepted')
                 .select('id')
                 )
             .select('dibursed_amount')
 
             //Then money is transferred from client to service provider
-            const offer = await Offer.find(params.offer)
+            const offer = await Offer.find(offerId)
             const ServiceProvider = await offer?.related('serviceProvider').query()
 
             if(ServiceProvider){

@@ -152,10 +152,10 @@ test('makeRequest', async ({client, assert}) => {
     const token = await getTokenAuthClient()
     const body = {
         time_limit: 5200,
-        addres: "CR 80 CL #45",
+        address: "CR 80 CL #45 Test",
         comments: "",
         date: "2023-07-21",
-        offers: [1]
+        offers: [4]
     }
     const response = await client.post('api/hastaTuCasa/client/makeRequest').json(body).header('Authorization', `Bearer ${token}`)
     response.assertStatus(200)
@@ -201,7 +201,7 @@ test('seeMyRequests invalid rol', async ({client, assert}) => {
 
 test('cancelPurchase', async ({client, assert}) => {
     const token = await getTokenAuthClient()
-    const response = await client.put('api/hastaTuCasa/client/cancelPurchase/3/2').header('Authorization', `Bearer ${token}`)
+    const response = await client.put('api/hastaTuCasa/client/cancelPurchase/9/1').header('Authorization', `Bearer ${token}`)
     response.assertStatus(200)
     assert.isObject(response.body())
 })
@@ -265,7 +265,7 @@ test('rateOffer', async ({client, assert}) => {
         efficacy: 1,
         customer_service: 1
     }
-    const response = await client.post('api/hastaTuCasa/client/rateOffer/3').json(body).header('Authorization', `Bearer ${token}`)
+    const response = await client.post('api/hastaTuCasa/client/rateOffer/2/3').json(body).header('Authorization', `Bearer ${token}`)
     response.assertStatus(200)
     assert.isObject(response.body())
 })

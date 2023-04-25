@@ -46,7 +46,7 @@ Route.group(() => {//Routes for Client
   Route.put('/cancelPurchase/*', 'ClientsController.cancelPurchase')
   Route.get('/addFavoriteOffer/:offer', 'ClientsController.addFavoriteOffer')
   Route.get('/getFavoriteOffers', 'ClientsController.getFavoriteOffers')
-  Route.post('/rateOffer/:offer', 'ClientsController.rateOffer')
+  Route.post('/rateOffer/*', 'ClientsController.rateOffer')
   Route.post('/commentOffer/:offer', 'ClientsController.commentOffer')
 }).prefix('api/hastaTuCasa/client').middleware(['auth', 'client'])
 
@@ -98,4 +98,4 @@ Route.group(() => {//Routes for Bills
 
 Route.group(() => {//Routes for Ratings
   Route.get('/getRatings', 'RatingsController.getRatings')
-}).prefix('api/hastaTuCasa').middleware(['auth', 'admin'])
+}).prefix('api/hastaTuCasa').middleware('auth')

@@ -48,7 +48,8 @@ export default class ServicesController {
 
     public async getServiceByName({response, params}: HttpContextContract):Promise<void>{
         try{
-            const service:any = await Service.findBy('name', params.name)
+            const name:string = params.name.replace('%20', ' ')
+            const service:any = await Service.findBy('name', name)
             if(!service){
                 return response.status(400).json({
                     state: false,
@@ -108,7 +109,6 @@ export default class ServicesController {
         try{
             const service:any = await Service.findOrFail(params.id)
             service.state = false
-            console.log(service)
             await service.save()
             return response.status(200).json({
                 state: true,
