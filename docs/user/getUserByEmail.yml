@@ -1,0 +1,46 @@
+/api/hastaTuCasa/getUserByEmail/{email}:
+  get:
+    tags:
+      - User
+    security:
+      - bearerAuth: []
+    summary: Get user by email
+    parameters:
+      - in: path
+        name: email
+        required: true
+        schema:
+          type: string
+        description: User email to get
+        allowReserved: true
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Successful request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getUserByEmail'
+      400:
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Response'
+            example:
+              {
+                "state": false,
+                "message": "User not found"
+              }
+      401:
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Response'
+            example:
+              {
+                "state": false,
+                "message": "You do not have permission to access this resource"
+              }

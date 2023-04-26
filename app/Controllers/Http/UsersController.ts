@@ -171,7 +171,8 @@ export default class UsersController {
 
     public async getUserByEmail({response, params}: HttpContextContract):Promise<void>{
         try{
-            const user:User[]  = await User.query().where({email: params.email}).from('users').select('id', 'name', 'phone', 'email', 'address', 'bank_account', 'state', 'role')
+            const email:string = params.email.replace('%40', '@')
+            const user:User[]  = await User.query().where({email: email}).from('users').select('id', 'name', 'phone', 'email', 'address', 'bank_account', 'state', 'role')
             if(!user[0]){
                 return response.status(400).json({
                     state:false,

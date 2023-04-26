@@ -1,0 +1,54 @@
+/api/hastaTuCasa/loginByPhone:
+  post:
+    tags:
+      - Login
+    security: []
+    summary: Login by phone
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/loginByPhone'
+
+    responses:
+      200:
+        description: Successful request
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: boolean
+                  description: The state of the request
+                message:
+                  type: string
+                  description: The message of the request
+                name: 
+                  type: string
+                  description: The name of the user
+                email:
+                  type: string
+                  description: The email of the user
+                token:
+                  type: string
+                  description: The token of the user
+            example:
+              {
+                "state": true,
+                "message": "Login successful",
+                "name": "Amanda",
+                "email": "ama@unal.edu.co",
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQW1hbmRhIiwiaWQiOjUsImVtYWlsIjoiYW1hQHVuYWwuZWR1LmNvIiwicGhvbmUiOiIzMTQ1NjQ0NDU0IiwiaWF0IjoxNjgyNDgyNDk4LCJleHAiOjE2ODI0ODMzOTh9.0hF6Af_LKIhKO8zloV5pvNk5gbmMjTffqqnPspHQTog"
+              }
+      400:
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Response'
+            example:
+              {
+                "state": false,
+                "message": "Incorrect password or phone"
+              }        

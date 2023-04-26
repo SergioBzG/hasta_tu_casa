@@ -1,0 +1,11 @@
+definitions:
+  Response:
+    type: object
+    properties:
+      state:
+        type: boolean
+        description: The state of the request
+      message:
+        type: string
+        description: The message of the request
+      

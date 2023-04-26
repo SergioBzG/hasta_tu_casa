@@ -1,0 +1,38 @@
+/api/hastaTuCasa/getUsers:
+  get:
+    tags:
+      - User
+    security:
+      - bearerAuth: []
+    summary: Get all users
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Successful request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/getUsers'
+      400:
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Response'
+            example:
+              {
+                "state": false,
+                "message": "Token expired"
+              }
+      401:
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Response'
+            example:
+              {
+                "state": false,
+                "message": "You do not have permission to access this resource"
+              }

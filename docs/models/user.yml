@@ -1,0 +1,160 @@
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+      address:
+        type: string
+      bank_account:
+        type: string
+      role:
+        type: string
+        enum:
+          - Admin
+          - Client
+          - ServiceProvider
+    required:
+      - id
+      - name
+      - phone
+      - email
+      - address
+      - role
+
+components:
+  schemas:
+    loginByPhone:
+      type: object
+      properties:
+        phone: 
+          type: string
+          description: User phone
+        password:
+          type: string
+          description: User password
+      required:
+        - phone
+        - password
+      example:
+        {
+          "phone": "3149896767",
+          "password": "hele"
+        }
+
+    loginByEmail:
+      type: object
+      properties:
+        email: 
+          type: string
+          description: User email
+        password:
+          type: string
+          description: User password
+      required:
+        - email
+        - password
+      example:
+        {
+          "email": "cass@unal.edu.co",
+          "password": "cass"
+        }
+    
+    getUsers:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Request state
+        message:
+          type: string
+          description: Request message
+        users:
+          type: array
+          description: List of users
+          items:
+            $ref: '#/definitions/User'
+      example:
+        {
+          "state": true,
+          "message": "List of all users",
+          "users": [
+              {
+                  "id": 2,
+                  "name": "Cassandra",
+                  "phone": "3104975520",
+                  "email": "cass@unal.edu.co",
+                  "address": "CL 68 # 51bB-31",
+                  "bank_account": null,
+                  "role": "Admin"
+              },
+              {
+                  "id": 4,
+                  "name": "Anibal",
+                  "phone": "3200876990",
+                  "email": "anibla@unal.edu.co",
+                  "address": "Medellin",
+                  "bank_account": null,
+                  "role": "Client"
+              }
+          ]
+        }
+
+    getUserByEmail:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Request state
+        user:
+          type: object
+          description: User information
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            phone:
+              type: string
+            email:
+              type: string
+            address:
+              type: string
+            bank_account:
+              type: string
+            state:
+              type: boolean
+            role:
+              type: string
+              enum:
+                - Admin
+                - Client
+                - ServiceProvider
+          required:
+            - id
+            - name
+            - phone
+            - email
+            - address
+            - state
+            - role
+      example:
+        {
+          "state": true,
+          "user": {
+              "id": 2,
+              "name": "Cassandra",
+              "phone": "3104975520",
+              "email": "cass@unal.edu.co",
+              "address": "CL 68 # 51bB-31",
+              "bank_account": null,
+              "state": true,
+              "role": "Admin"
+          }
+        }    
