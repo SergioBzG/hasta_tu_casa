@@ -1,0 +1,152 @@
+definitions:
+  Offer:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Offer id
+      price:
+        type: number
+        description: Offer price
+      comments:
+        type: JSON
+        description: Offer comments
+      description:
+        type: string
+        description: Offer description
+      service:
+        type: string
+        description: Service offered (foriegn key to Service)
+      service_provider:
+        type: integer
+        description: Service provider (foreign key to Service Provider)
+      state:
+        type: string
+        description: Offer state
+      created_at:
+        type: string
+        description: Offer creation date
+      updated_at:
+        type: string
+        description: Offer update date
+    required:
+      - id
+      - price
+      - description
+      - service
+      - service_provider
+      - state
+      - created_at
+      - updated_at
+
+components:
+  schemas:
+    createOffer:
+      type: object
+      properties:
+        price:
+          type: number
+          description: Offer price
+        description:
+          type: string
+          description: Offer description
+        service:
+          type: string
+          description: Service offered (foriegn key to Service)
+        service_provider:
+          type: string
+          description: Service provider (foreign key to Service Provider)
+      example:
+        {
+          "price": 90000,
+          "description": "Te limpio el tubo",
+          "service": "Sex",
+          "service_provider": "3149896767"
+        }
+
+    getOffers:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        offers:
+          type: array
+          description: List of offers	
+          items:
+            $ref: '#/definitions/Offer'
+      example:
+        {
+          "state": true,
+          "message": "List of offers",
+          "offers": [
+              {
+                  "id": 1,
+                  "price": "30000.00",
+                  "comments": null,
+                  "description": "Por 30k ya no se lo dejo tan chimba chimba",
+                  "service": "Gardening",
+                  "service_provider": "3134872308",
+                  "state": true,
+                  "created_at": "2023-04-08T19:57:45.345-05:00",
+                  "updated_at": "2023-04-08T20:09:40.158-05:00"
+              },
+              {
+                  "id": 4,
+                  "price": "130000.00",
+                  "comments": null,
+                  "description": "This is a full service",
+                  "service": "Computing Repair",
+                  "service_provider": "3149896767",
+                  "state": true,
+                  "created_at": "2023-04-24T15:38:34.735-05:00",
+                  "updated_at": "2023-04-24T15:38:34.735-05:00"
+              }
+          ]
+        }
+
+    getOfferById:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        offer:
+          description: Offer information
+          $ref: '#/definitions/Offer'
+      example:
+        {
+          "state": true,
+          "offer": {
+              "id": 2,
+              "price": "130000.00",
+              "comments": null,
+              "description": "Le dejo el jardin melo (test)",
+              "service": "Gardening",
+              "service_provider": "3134872308",
+              "state": false,
+              "created_at": "2023-04-08T19:58:31.865-05:00",
+              "updated_at": "2023-04-24T19:19:46.677-05:00"
+          }
+        }
+
+    updateOffer:
+      type: object
+      properties:
+        price:
+          type: number
+          description: Offer price
+        description:
+          type: string
+          description: Offer description
+      required:
+        - price
+        - description
+      example:
+        {
+          "price": 100000,
+          "description": "Le dejo el jardin una chimba"
+        }

@@ -1,0 +1,101 @@
+definitions:
+  Service:
+    type: object
+    properties: 
+      id:
+        type: integer
+        description: Service id
+      name:
+        type: string
+        description: Service name
+      category:
+        type: string
+        description: Service category
+      commission:
+        type: string
+        description: Service commission
+      state:
+        type: boolean
+        description: Service state
+      created_at:
+        type: string
+        description: Service creation date
+      updated_at:
+        type: string
+        description: Service update date
+
+components:
+  schemas:
+    createService:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Service name
+        category:
+          type: string
+          description: Service category
+        commission:
+          type: string
+          description: Service commission
+      required:
+        - name
+        - category
+        - commission
+      example:
+        {
+          "name": "Computing Repair",
+          "category": "Appliances",
+          "commission": 0.09
+        }
+        
+    getServices:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        services:
+          type: array
+          description: List of services
+          items:
+            $ref: '#/definitions/Service'
+      example:
+        {
+          "state": true,
+          "message": "List of services",
+          "services": [
+              {
+                  "id": 1,
+                  "name": "Sex",
+                  "category": "Pleasure",
+                  "commission": "0.08",
+                  "state": true,
+                  "created_at": "2023-04-08T18:22:49.293-05:00",
+                  "updated_at": "2023-04-08T18:22:49.293-05:00"
+              },
+              {
+                  "id": 5,
+                  "name": "Hair Salon",
+                  "category": "Beauty",
+                  "commission": "0.09",
+                  "state": true,
+                  "created_at": "2023-04-08T18:43:09.251-05:00",
+                  "updated_at": "2023-04-08T18:43:09.251-05:00"
+              }
+          ]
+        }
+
+    getServiceByName:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        service:
+          description: Service information
+          $ref: '#/definitions/Service'
+  

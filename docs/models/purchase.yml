@@ -1,0 +1,180 @@
+definitions:
+  Purchase:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Purchase id
+      state:
+        type: string
+        description: Purchase state
+        enum:
+          - pending
+          - accepted
+          - rejected
+          - canceled
+      offer:
+        type: integer
+        description: Offer id
+      request:
+        type: integer
+        description: Request code
+      created_at:
+        type: string
+        format: date-time
+        description: Purchase creation date
+      updated_at:
+        type: string
+        format: date-time
+        description: Purchase update date
+  
+components:
+  schemas:
+    getPurchases:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        purchases:
+          type: array
+          description: List of purchases
+          items:
+            $ref: '#/definitions/Purchase'
+      example:
+        {
+          "state": true,
+          "message": "List of purchases",
+          "purchases": [
+              {
+                  "id": 5,
+                  "state": "canceled",
+                  "offer": 1,
+                  "request": 2,
+                  "created_at": "2023-04-10T23:27:09.527-05:00",
+                  "updated_at": "2023-04-12T22:18:34.441-05:00"
+              },
+              {
+                  "id": 6,
+                  "state": "rejected",
+                  "offer": 2,
+                  "request": 2,
+                  "created_at": "2023-04-10T23:27:09.558-05:00",
+                  "updated_at": "2023-04-12T23:10:45.389-05:00"
+              }
+          ]
+        }
+
+    getPurchaseById:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        purchase:
+          description: Purchase information
+          $ref: '#/definitions/Purchase'
+      example:
+        {
+          "state": true,
+          "purchase": {
+              "id": 5,
+              "state": "canceled",
+              "offer": 1,
+              "request": 2,
+              "created_at": "2023-04-10T23:27:09.527-05:00",
+              "updated_at": "2023-04-12T22:18:34.441-05:00"
+          }
+        }
+
+    getPurchaseByState:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        purchases:
+          type: array
+          description: List of purchases with specified state
+          items:
+            $ref: '#/definitions/Purchase'
+      example:
+        {
+          "state": true,
+          "message": "List of purchases with state accepted",
+          "purchases": [
+              {
+                  "id": 4,
+                  "state": "accepted",
+                  "offer": 3,
+                  "request": 2,
+                  "created_at": "2023-04-10T23:27:09.509-05:00",
+                  "updated_at": "2023-04-13T00:19:44.974-05:00"
+              },
+              {
+                  "id": 8,
+                  "state": "accepted",
+                  "offer": 3,
+                  "request": 4,
+                  "created_at": "2023-04-24T11:48:08.239-05:00",
+                  "updated_at": "2023-04-24T15:38:36.945-05:00"
+              }
+          ]
+        }
+
+    getBillPurchase:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        purchase:
+          type: array
+          description: Purchase information
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Purchase id
+              offer:
+                type: integer
+                description: Offer id
+              request:
+                type: integer
+                description: Request code
+              bill:
+                type: object
+                description: Bill information
+                properties:
+                  $ref: '#/definitions/Bill'
+            example:
+              {
+                "state": true,
+                "purchase": [
+                    {
+                        "id": 4,
+                        "offer": 3,
+                        "request": 2,
+                        "bill": {
+                            "id": 1,
+                            "payment_amount": "90000.00",
+                            "commission": "0.08",
+                            "dibursed_amount": "82800.00",
+                            "purchase": 4,
+                            "state": true,
+                            "created_at": "2023-04-13T00:19:44.761-05:00",
+                            "updated_at": "2023-04-13T00:19:44.761-05:00"
+                        }
+                    }
+                ]
+              }
+          
+
+     

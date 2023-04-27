@@ -1,28 +1,27 @@
-/api/hastaTuCasa/getUserByEmail/{email}:
+/api/hastaTuCasa/getBillPurchase/{id}:
   get:
     tags:
-      - User
+      - Purchase
     security:
       - bearerAuth: []
-    summary: Get user by email
+    summary: Get the bill of a purchase
     parameters:
       - in: path
-        name: email
+        name: id
         required: true
         schema:
-          type: string
-        description: User email to get
-        allowReserved: true
+          type: integer
+        description: Purchases id to get the bill
     produces:
       - application/json
-    
+
     responses:
       200:
         description: Successful request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/getUserByEmail'
+              $ref: '#/components/schemas/getBillPurchase'
       400:
         description: Bad request
         content:
@@ -32,7 +31,7 @@
             example:
               {
                 "state": false,
-                "message": "User not found"
+                "message": "Rows not found"
               }
       401:
         description: Unauthorized

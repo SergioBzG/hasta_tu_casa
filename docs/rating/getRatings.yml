@@ -1,28 +1,20 @@
-/api/hastaTuCasa/getUserByEmail/{email}:
+/api/hastaTuCasa/getRatings:
   get:
     tags:
-      - User
-    security:
+      - Rating
+    security: 
       - bearerAuth: []
-    summary: Get user by email
-    parameters:
-      - in: path
-        name: email
-        required: true
-        schema:
-          type: string
-        description: User email to get
-        allowReserved: true
+    summary: Get all ratings
     produces:
       - application/json
-    
+
     responses:
       200:
         description: Successful request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/getUserByEmail'
+              $ref: '#/components/schemas/getRatings'
       400:
         description: Bad request
         content:
@@ -32,7 +24,7 @@
             example:
               {
                 "state": false,
-                "message": "User not found"
+                "message": "Rows not found"
               }
       401:
         description: Unauthorized
@@ -43,5 +35,5 @@
             example:
               {
                 "state": false,
-                "message": "You do not have permission to access this resource"
+                "message": "You not have permissions to access this resource"
               }

@@ -1,28 +1,38 @@
-/api/hastaTuCasa/getUserByEmail/{email}:
-  get:
+/api/hastaTuCasa/rejectPurchase/{request}/{offer}:
+  put:
     tags:
-      - User
+      - ServiceProvider
     security:
       - bearerAuth: []
-    summary: Get user by email
+    summary: Reject purchase (Service provider logged)
     parameters:
       - in: path
-        name: email
+        name: request
+        description: Request code
         required: true
         schema:
-          type: string
-        description: User email to get
-        allowReserved: true
+          type: integer
+      - in: path
+        name: offer
+        description: Offer id
+        required: true
+        schema:
+          type: integer
     produces:
       - application/json
-    
+
     responses:
       200:
         description: Successful request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/getUserByEmail'
+              $ref: '#/definitions/Response'
+            example:
+              {
+                "state": true,
+                "message": "Purchase rejected"
+              }
       400:
         description: Bad request
         content:
@@ -32,7 +42,7 @@
             example:
               {
                 "state": false,
-                "message": "User not found"
+                "message": "Purchase not found"
               }
       401:
         description: Unauthorized
@@ -43,5 +53,5 @@
             example:
               {
                 "state": false,
-                "message": "You do not have permission to access this resource"
+                "message": "Missing authorization token"
               }

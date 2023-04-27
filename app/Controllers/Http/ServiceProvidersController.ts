@@ -63,10 +63,11 @@ export default class ServiceProvidersController {
 
     public async getServiceProviderByEmail({response, params}: HttpContextContract):Promise<void>{
         try{
+            const email:string = params.email.replace('%40', '@')
             const serviceProvider:Object[] = await Database
             .from('users')
             .join('service_providers', 'users.phone', '=', 'service_providers.phone')
-            .where({email: params.email})
+            .where({email: email})
             .select(['users.id', 'users.name', 'users.phone', 'users.email', 'users.address', 'users.bank_account', 'users.state', 'users.role', 'service_providers.professional_profile', 'service_providers.document_number', 'service_providers.response_time', 'service_providers.unanswered_requests', 'service_providers.available', 'service_providers.income']) 
 
             if(!serviceProvider[0]){

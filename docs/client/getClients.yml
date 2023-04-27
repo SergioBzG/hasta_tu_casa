@@ -1,18 +1,10 @@
-/api/hastaTuCasa/getUserByEmail/{email}:
+/api/hastaTuCasa/client/getClients:
   get:
     tags:
-      - User
+      - Client
     security:
       - bearerAuth: []
-    summary: Get user by email
-    parameters:
-      - in: path
-        name: email
-        required: true
-        schema:
-          type: string
-        description: User email to get
-        allowReserved: true
+    summary: Get all clients
     produces:
       - application/json
     
@@ -22,7 +14,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/getUserByEmail'
+              $ref: '#/components/schemas/getClients'
       400:
         description: Bad request
         content:
@@ -32,7 +24,7 @@
             example:
               {
                 "state": false,
-                "message": "User not found"
+                "message": "Clients not found"
               }
       401:
         description: Unauthorized

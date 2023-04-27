@@ -1,20 +1,29 @@
-/api/hastaTuCasa/deleteUser/{id}:
-  delete:
+/api/hastaTuCasa/client/rateOffer/{request}/{offer}:
+  post:
     tags:
-      - User
+      - Client
     security:
       - bearerAuth: []
-    summary: Delete user by id
+    summary: Rate offer (Client logged)
     parameters:
       - in: path
-        name: id
+        name: request
+        description: Request code
         required: true
         schema:
           type: integer
-        description: User id to delete
-    produces:
-      - application/json
-    
+      - in: path
+        name: offer
+        description: Offer id
+        required: true
+        schema:
+          type: integer
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/rateOffer'
+
     responses:
       200:
         description: Successful request
@@ -25,7 +34,7 @@
             example:
               {
                 "state": true,
-                "message": "User deleted successfully"
+                "message": "Offer rated successfully"
               }
       400:
         description: Bad request
@@ -36,7 +45,7 @@
             example:
               {
                 "state": false,
-                "message": "User not found"
+                "message": "You can not rate this offer"
               }
       401:
         description: Unauthorized
@@ -47,5 +56,6 @@
             example:
               {
                 "state": false,
-                "message": "You do not have permission to access this resource"
+                "message": "Missing authorization token"
               }
+

@@ -1,28 +1,28 @@
-/api/hastaTuCasa/getUserByEmail/{email}:
+/api/hastaTuCasa/client/getClientByEmail/{email}:
   get:
     tags:
-      - User
+      - Client
     security:
       - bearerAuth: []
-    summary: Get user by email
+    summary: Get client by email
     parameters:
       - in: path
         name: email
         required: true
         schema:
           type: string
-        description: User email to get
+        description: Client email to get
         allowReserved: true
     produces:
       - application/json
-    
+
     responses:
       200:
         description: Successful request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/getUserByEmail'
+              $ref: '#/components/schemas/getClientByEmail'
       400:
         description: Bad request
         content:

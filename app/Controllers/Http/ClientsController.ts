@@ -63,10 +63,11 @@ export default class ClientsController {
 
     public async getClientByEmail({response, params}: HttpContextContract):Promise<void>{
         try{
+            const email:string = params.email.replace('%40', '@')
             const client:Object[] = await Database
             .from('users')
             .join('clients', 'users.phone', '=', 'clients.phone')
-            .where({email: params.email})
+            .where({email: email})
             .select(['users.id', 'users.name', 'users.phone', 'users.email', 'users.address', 'users.bank_account', 'users.state','users.role', 'clients.payment_method', 'clients.level']) 
 
             if(!client[0]){

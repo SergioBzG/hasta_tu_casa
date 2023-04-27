@@ -57,9 +57,8 @@ export default class PurchasesController {
             const purchase = await Purchase.find(params.id)
             if(!purchase){
                 return response.status(400).json({
-                    state: true,
-                    message: 'Purchase found',
-                    purchase
+                    state: false,
+                    message: 'Purchase not found'
                 })
             }
             return response.status(200).json({

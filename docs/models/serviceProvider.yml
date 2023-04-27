@@ -1,0 +1,442 @@
+definitions:
+  ServiceProvider:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+      address:
+        type: string
+      bank_account:
+        type: string
+      role:
+        type: string
+      professional_profile:
+        type: string
+      document_number:
+        type: string
+      response_time:
+        type: number
+      unanswered_requests:
+        type: integer
+      available:
+        type: boolean
+      income:
+        type: number
+    required:
+      - id
+      - name
+      - phone
+      - email
+      - address
+      - bank_account
+      - role
+      - professional_profile
+      - document_number
+      - response_time
+      - unanswered_requests
+      - available
+      - income
+
+components:
+  schemas:
+    createServiceProvider:
+      type: object
+      properties:
+        phone:
+          type: string
+          description: User phone
+        name:
+          type: string
+          description: User name
+        email:
+          type: string
+          description: User email
+        password:
+          type: string
+          description: User password
+        address:
+          type: string
+          description: User address
+        bank_account:
+          type: string
+          description: User bank account
+        professional_profile:
+          type: string
+          description: Service provider professional profile
+        document_number:
+          type: string
+          description: Service provider document number
+      example:
+        {
+          "phone": "3134872308",
+          "name": "Amelia",
+          "email": "ame@unal.edu.co",
+          "password": "ame",
+          "address": "Pasto",
+          "bank_account": "6781436784437",
+          "professional_profile": "Gardener",
+          "document_number": "1001031725"
+        }
+
+    getServiceProviders:
+      type: object
+      properties:
+        state: 
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        serviceProviders:
+          type: array
+          items:
+            $ref: '#/definitions/ServiceProvider'
+      example:
+        {
+          "state": true,
+          "message": "List of service providers",
+          "serviceProviders": [
+              {
+                  "id": 9,
+                  "name": "Amelia",
+                  "phone": "3134872308",
+                  "email": "ame@unal.edu.co",
+                  "address": "Pasto",
+                  "bank_account": "6781436784437",
+                  "role": "ServiceProvider",
+                  "professional_profile": "Gardener",
+                  "document_number": "1001031725",
+                  "response_time": 0,
+                  "unanswered_requests": 0,
+                  "available": true,
+                  "income": "0.00"
+              },
+              {
+                  "id": 8,
+                  "name": "Helena",
+                  "phone": "3149896767",
+                  "email": "hele@unal.edu.co",
+                  "address": "Bucaramanga",
+                  "bank_account": "8942436784437",
+                  "role": "ServiceProvider",
+                  "professional_profile": "Plumber",
+                  "document_number": "1001031722",
+                  "response_time": 0,
+                  "unanswered_requests": 0,
+                  "available": true,
+                  "income": "331200.00"
+              },
+          ]
+        }
+
+    getServiceProviderByEmail:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User id
+        name:
+          type: string
+          description: User name
+        phone:
+          type: string
+          description: User phone
+        email:
+          type: string
+          description: User email
+        address:
+          type: string
+          description: User address
+        bank_account:
+          type: string
+          description: User bank account
+        state:
+          type: boolean
+          description: User state
+        role:
+          type: string
+          description: User role
+        professional_profile:
+          type: string
+          description: Service provider professional profile
+        document_number:
+          type: string
+          description: Service provider document number
+        response_time:
+          type: number
+          description: Service provider response time
+        unanswered_requests:
+          type: integer
+          description: Service provider unanswered requests
+        available:
+          type: boolean
+          description: Service provider availability
+        income:
+          type: number
+          description: Service provider income
+      example:
+        {
+          "state": true,
+          "serviceProvider": {
+              "id": 7,
+              "name": "Sara",
+              "phone": "315678000",
+              "email": "sara@unal.edu.co",
+              "address": "Manizales",
+              "bank_account": "8942435093436",
+              "state": true,
+              "role": "ServiceProvider",
+              "professional_profile": "Stylist",
+              "document_number": "1001031723",
+              "response_time": 30,
+              "unanswered_requests": 0,
+              "available": true,
+              "income": "0.00"
+          }
+        }
+
+    updateServiceProvider:
+      type: object
+      properties:
+        name:
+          type: string
+          description: User name
+        email: 
+          type: string
+          description: User email
+        password:
+          type: string
+          description: User password
+        address:
+          type: string
+          description: User address
+        bank_account:
+          type: string
+          description: User bank account
+        state:
+          type: boolean
+          description: User state
+        professional_profile:
+          type: string
+          description: Service provider professional profile
+        response_time:
+          type: number
+          description: Service provider response time
+        unanswered_requests:
+          type: integer
+          description: Service provider unanswered requests
+        available:
+          type: boolean
+          description: Service provider availability
+        income:
+          type: number
+          description: Service provider income
+      example:
+        {
+          "name": "Sara",
+          "email": "sara@unal.edu.co",
+          "password": "sara",
+          "address": "Medellin",
+          "bank_account": "8942435093436",
+          "state": true,
+          "professional_profile": "stylist",
+          "response_time": 30,
+          "unanswered_requests": 3,
+          "income": 420000.00
+        }
+
+    seeMyRequestsServiceProvider:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        myOffersRequested:
+          type: array
+          description: List of my offers requested
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Offer id
+              price:
+                type: number
+                description: Offer price
+              description:
+                type: string
+                description: Offer description
+              service:
+                type: string
+                description: Service offered
+              service_provider:
+                type: string
+                description: Service provider phone
+              purchases:
+                type: array
+                description: List of purchases
+                items:
+                  type: object
+                  properties:
+                    state:
+                      type: string
+                      description: Purchase state
+                      enum: [pending, accepted, rejected]
+                    request:
+                      type: integer
+                      description: Request code
+                    offer:
+                      type: integer
+                      description: Offer id
+                    requests:
+                      type: object
+                      description: Request information
+                      properties:
+                        time_limit:
+                          type: integer
+                          description: Request time limit
+                        address:
+                          type: string
+                          description: Client address
+                        comments:
+                          type: string
+                          description: Request comments
+                        date:
+                          type: string
+                          description: Request date
+                        client:
+                          type: string
+                          description: Client phone
+                        request_code:
+                          type: integer
+                          description: Request code
+      example:
+        {
+          "state": true,
+          "message": "List of my requests",
+          "myOffersRequested": [
+              {
+                  "id": 4,
+                  "price": "130000.00",
+                  "description": "This is a full service",
+                  "service": "Computing Repair",
+                  "service_provider": "3149896767",
+                  "purchases": [
+                      {
+                          "state": "accepted",
+                          "request": 12,
+                          "offer": 4,
+                          "requests": {
+                              "time_limit": 5200,
+                              "address": "CR 80 CL #45 Test",
+                              "comments": "",
+                              "date": "2023-07-21T05:00:00.000Z",
+                              "client": "3145644454",
+                              "request_code": 12
+                          }
+                      },
+                      {
+                          "state": "rejected",
+                          "request": 16,
+                          "offer": 4,
+                          "requests": {
+                              "time_limit": 5200,
+                              "address": "CR 80 CL #45 Test2",
+                              "comments": "",
+                              "date": "2023-05-12T05:00:00.000Z",
+                              "client": "3145644454",
+                              "request_code": 16
+                          }
+                      },
+                      {
+                          "state": "accepted",
+                          "request": 15,
+                          "offer": 4,
+                          "requests": {
+                              "time_limit": 5200,
+                              "address": "CR 80 CL #45 Test",
+                              "comments": "",
+                              "date": "2023-05-12T05:00:00.000Z",
+                              "client": "3145644454",
+                              "request_code": 15
+                          }
+                      },
+                      {
+                          "state": "rejected",
+                          "request": 17,
+                          "offer": 4,
+                          "requests": {
+                              "time_limit": 5200,
+                              "address": "CR 80 CL #45 Test3",
+                              "comments": "",
+                              "date": "2023-05-12T05:00:00.000Z",
+                              "client": "3145644454",
+                              "request_code": 17
+                          }
+                      }
+                  ]
+              }
+          ]
+      }
+
+    seeMyOffers:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        myOffers:
+          type: array
+          description: List of my offers
+          items:
+            $ref: '#/definitions/Offer'
+      example:
+        {
+          "state": true,
+          "message": "List of my offers",
+          "myOffers": [
+              {
+                  "id": 4,
+                  "price": "130000.00",
+                  "comments": null,
+                  "description": "This is a full service",
+                  "service": "Computing Repair",
+                  "service_provider": "3149896767",
+                  "state": true,
+                  "created_at": "2023-04-24T15:38:34.735-05:00",
+                  "updated_at": "2023-04-24T15:38:34.735-05:00"
+              },
+              {
+                  "id": 3,
+                  "price": "90000.00",
+                  "comments": {
+                      "comments": [
+                          "Excellent service",
+                          "GoodJob",
+                          "Test comment",
+                          "Test comment",
+                          "Test comment"
+                      ]
+                  },
+                  "description": "Te limpio el tubo",
+                  "service": "Sex",
+                  "service_provider": "3149896767",
+                  "state": true,
+                  "created_at": "2023-04-09T00:33:39.544-05:00",
+                  "updated_at": "2023-04-24T19:19:45.257-05:00"
+              }
+          ]
+        }
+    

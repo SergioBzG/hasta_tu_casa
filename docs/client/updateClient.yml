@@ -1,28 +1,35 @@
-/api/hastaTuCasa/getUserByEmail/{email}:
-  get:
+/api/hastaTuCasa/client/updateClient/{id}:
+  put:
     tags:
-      - User
+      - Client
     security:
       - bearerAuth: []
-    summary: Get user by email
+    summary: Update client
     parameters:
       - in: path
-        name: email
+        name: id
         required: true
         schema:
-          type: string
-        description: User email to get
-        allowReserved: true
-    produces:
-      - application/json
+          type: integer
+        description: User id to update
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/updateClient'
     
     responses:
       200:
         description: Successful request
         content:
-          application/json:
+          appllication/json:
             schema:
-              $ref: '#/components/schemas/getUserByEmail'
+              $ref: '#/definitions/Response'
+            example:
+              {
+                "state": true,
+                "message": 'User updated successfully' 
+              }
       400:
         description: Bad request
         content:
@@ -45,3 +52,4 @@
                 "state": false,
                 "message": "You do not have permission to access this resource"
               }
+

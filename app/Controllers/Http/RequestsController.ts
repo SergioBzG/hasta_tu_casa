@@ -94,7 +94,7 @@ export default class RequestsController {
     public async getOffersByRequest({response, params}: HttpContextContract):Promise<void>{
         try{
             const request = await Request.find(params.code)
-            // const request = await Request.find(params.code).preload('offers')
+
             if(!request){
                 return response.status(400).json({
                     state: false,

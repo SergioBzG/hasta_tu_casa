@@ -1,28 +1,32 @@
-/api/hastaTuCasa/getUserByEmail/{email}:
-  get:
+/api/hastaTuCasa/deleteOffer/{id}:
+  delete:
     tags:
-      - User
-    security:
+      - Offer
+    security: 
       - bearerAuth: []
-    summary: Get user by email
+    summary: Delete a offer by id
     parameters:
       - in: path
-        name: email
+        name: id
         required: true
         schema:
-          type: string
-        description: User email to get
-        allowReserved: true
+          type: integer
+        description: Offer id to delete
     produces:
       - application/json
-    
+
     responses:
       200:
         description: Successful request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/getUserByEmail'
+              $ref: '#/definitions/Response'
+            example:
+              {
+                "state": true,
+                "message": "Offer deleted successfully"
+              }
       400:
         description: Bad request
         content:
@@ -32,7 +36,7 @@
             example:
               {
                 "state": false,
-                "message": "User not found"
+                "message": "Offer not found"
               }
       401:
         description: Unauthorized
@@ -43,5 +47,5 @@
             example:
               {
                 "state": false,
-                "message": "You do not have permission to access this resource"
+                "message": "Missing authorization token"
               }

@@ -1,0 +1,80 @@
+definitions:
+  Rating:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Rating id
+      efficiency:
+        type: integer
+        description: Efficiency rating
+      efficacy:
+        type: integer
+        description: Efficacy rating
+      customer_service:
+        type: integer
+        description: Customer service rating
+      client:
+        type: string
+        description: Client phone who made the rating
+      offer:
+        type: integer
+        description: Offer id rated
+      state:
+        type: boolean
+        description: Rating state
+      created_at:
+        type: string
+        format: date-time
+        description: Rating creation date
+      updated_at:
+        type: string
+        format: date-time
+        description: Rating update date
+
+components:
+  schemas:
+    getRatings:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        ratings:
+          type: array
+          description: List of ratings
+          items:
+            $ref: '#/definitions/Rating'
+      example:
+        {
+          "state": true,
+          "message": "List of ratings",
+          "ratings": [
+              {
+                  "id": 12,
+                  "efficiency": 5,
+                  "efficacy": 5,
+                  "customer_service": 5,
+                  "client": "3200876990",
+                  "offer": 6,
+                  "state": true,
+                  "created_at": "2023-04-26T22:39:20.566-05:00",
+                  "updated_at": "2023-04-26T22:39:20.566-05:00"
+              },
+              {
+                  "id": 11,
+                  "efficiency": 1,
+                  "efficacy": 1,
+                  "customer_service": 1,
+                  "client": "3145644454",
+                  "offer": 3,
+                  "state": true,
+                  "created_at": "2023-04-24T19:19:45.060-05:00",
+                  "updated_at": "2023-04-24T19:19:45.060-05:00"
+              }
+          ]
+        }  
+ 

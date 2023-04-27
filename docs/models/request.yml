@@ -1,0 +1,178 @@
+definitions:
+  Request:
+    type: object
+    properties:
+      request_code:
+        type: integer
+        description: Request code
+      time_limit:
+        type: integer
+        description: Time limit for response the request
+      address:
+        type: string
+        description: Client address
+      comments:
+        type: string
+        description: Comments about the request
+      date:
+        type: string
+        description: Date of the request
+      client:
+        type: string
+        description: Client phone number
+      created_at:
+        type: string
+        description: Date of creation
+      updated_at:
+        type: string
+        description: Date of last update
+
+components:
+  schemas:
+    getRequests:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        requests:
+          type: array
+          description: List of requests
+          items:
+            $ref: '#/definitions/Request'
+      example:
+        {
+          "state": true,
+          "message": "List of requests",
+          "requests": [
+              {
+                  "request_code": 21,
+                  "time_limit": 5200,
+                  "address": "CR 80 TestSwagger",
+                  "comments": "All right",
+                  "date": "2023-10-09T05:00:00.000Z",
+                  "client": "3200876990",
+                  "created_at": "2023-04-26T16:53:40.196-05:00",
+                  "updated_at": "2023-04-26T16:53:40.196-05:00"
+              },
+              {
+                  "request_code": 18,
+                  "time_limit": 5200,
+                  "address": "CR 80 CL #45 Test",
+                  "comments": "",
+                  "date": "2023-07-21T05:00:00.000Z",
+                  "client": "3145644454",
+                  "created_at": "2023-04-24T19:19:44.502-05:00",
+                  "updated_at": "2023-04-24T19:19:44.502-05:00"
+              }
+          ]
+        }
+
+    getRequestByCode:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        request:
+          description: Request information
+          $ref: '#/definitions/Request'
+      example:
+        {
+          "state": true,
+          "request": {
+              "request_code": 21,
+              "time_limit": 5200,
+              "address": "CR 80 TestSwagger",
+              "comments": "All right",
+              "date": "2023-10-09T05:00:00.000Z",
+              "client": "3200876990",
+              "created_at": "2023-04-26T16:53:40.196-05:00",
+              "updated_at": "2023-04-26T16:53:40.196-05:00"
+          }
+        }
+
+    getRequestByClient:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        requests:
+          type: array
+          description: List of requests
+          items:
+            $ref: '#/definitions/Request'
+      example:
+        {
+          "state": true,
+          "message": "List of requests",
+          "requests": [
+              {
+                  "request_code": 2,
+                  "time_limit": 4200,
+                  "address": "CL 79 #54C-31",
+                  "comments": "",
+                  "date": "2023-04-09T05:00:00.000Z",
+                  "client": "3145644454",
+                  "created_at": "2023-04-10T23:27:09.494-05:00",
+                  "updated_at": "2023-04-10T23:27:09.494-05:00"
+              },
+              {
+                  "request_code": 3,
+                  "time_limit": 6200,
+                  "address": "CL 79 #54C-31",
+                  "comments": "",
+                  "date": "2023-10-29T05:00:00.000Z",
+                  "client": "3145644454",
+                  "created_at": "2023-04-22T16:27:59.561-05:00",
+                  "updated_at": "2023-04-22T16:27:59.561-05:00"
+              }
+          ]
+        }
+
+    getOffersByRequest:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        offers:
+          type: array
+          description: List of offers
+          items:
+            $ref: '#/definitions/Offer'
+      example:
+        {
+          "state": true,
+          "message": "List of offers",
+          "offers": [
+              {
+                  "id": 6,
+                  "price": "1300000.00",
+                  "comments": {
+                      "comments": [
+                          "Que rico"
+                      ]
+                  },
+                  "description": "Cleaning only",
+                  "service": "Computing Repair",
+                  "service_provider": "3149896767",
+                  "state": true,
+                  "created_at": "2023-04-24T19:19:46.469-05:00",
+                  "updated_at": "2023-04-26T22:39:49.748-05:00"
+              }
+          ]
+        }
+
+
+

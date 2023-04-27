@@ -1,28 +1,28 @@
-/api/hastaTuCasa/getUserByEmail/{email}:
-  get:
+/api/hastaTuCasa/createServiceProvider:
+  post:
     tags:
-      - User
-    security:
+      - ServiceProvider
+    security: 
       - bearerAuth: []
-    summary: Get user by email
-    parameters:
-      - in: path
-        name: email
-        required: true
-        schema:
-          type: string
-        description: User email to get
-        allowReserved: true
-    produces:
-      - application/json
-    
+    summary: Create a new service provider
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/createServiceProvider'
+
     responses:
       200:
         description: Successful request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/getUserByEmail'
+              $ref: '#/definitions/Response'
+            example:
+              {
+                "state": true,
+                "message": "User created successfully"
+              }
       400:
         description: Bad request
         content:
@@ -32,7 +32,7 @@
             example:
               {
                 "state": false,
-                "message": "User not found"
+                "message": "Already exists a user with this email"
               }
       401:
         description: Unauthorized

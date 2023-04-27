@@ -1,0 +1,95 @@
+definitions:
+  Bill:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Bill id
+      payment_amount:
+        type: string
+        description: Cost of service done
+      commission:
+        type: string
+        description: Service commission
+      dibursed_amount:
+        type: string
+        description: Money to be paid to the provider
+      purchase:
+        type: integer
+        description: Purchase id
+      state:
+        type: boolean
+        description: Bill state
+      created_at:
+        type: string
+        description: Bill creation date
+      updated_at:
+        type: string
+        description: Bill update date
+
+components:
+  schemas:
+    getBills:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        message:
+          type: string
+          description: Response message
+        bills:
+          type: array
+          description: List of bills
+          items:
+            $ref: '#/definitions/Bill'
+      example:
+        {
+          "state": true,
+          "message": "List of bills",
+          "bills": [
+              {
+                  "id": 1,
+                  "payment_amount": "90000.00",
+                  "commission": "0.08",
+                  "dibursed_amount": "82800.00",
+                  "purchase": 4,
+                  "state": true,
+                  "created_at": "2023-04-13T00:19:44.761-05:00",
+                  "updated_at": "2023-04-13T00:19:44.761-05:00"
+              },
+              {
+                  "id": 2,
+                  "payment_amount": "90000.00",
+                  "commission": "0.08",
+                  "dibursed_amount": "82800.00",
+                  "purchase": 8,
+                  "state": true,
+                  "created_at": "2023-04-24T15:38:36.929-05:00",
+                  "updated_at": "2023-04-24T15:38:36.929-05:00"
+              }
+          ]
+        }
+    
+    getBillByPurchase:
+      type: object
+      properties:
+        state:
+          type: boolean
+          description: Response state
+        bill:
+          $ref: '#/definitions/Bill'
+      example:
+        {
+          "state": true,
+          "bill": {
+              "id": 1,
+              "payment_amount": "90000.00",
+              "commission": "0.08",
+              "dibursed_amount": "82800.00",
+              "purchase": 4,
+              "state": true,
+              "created_at": "2023-04-13T00:19:44.761-05:00",
+              "updated_at": "2023-04-13T00:19:44.761-05:00"
+          }
+        }
