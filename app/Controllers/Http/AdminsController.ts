@@ -6,9 +6,20 @@ export default class AdminsController {
 
     public async createAdmin({request, response}: HttpContextContract):Promise<void>{
         try{
-            const userData = request.only(['phone', 'name', 'password', 'email', 'address', 'bank_account', 'role'])
-            userData.role = 'Admin' //Role of the user
-            const adminData = request.only(['phone'])
+            // const userData = request.only(['phone', 'name', 'password', 'email', 'address', 'bank_account', 'role'])
+            const userData = {
+                phone: "3104975520",
+                name: "Cassandra",
+                password: "cass",
+                email: "cass@unal.edu.co",
+                address: "KR 51C",
+                bank_account: null,
+                role: ""
+            }
+            userData.role = "Admin" //Role of the user
+            const adminData = {
+                phone: userData.phone
+            }
 
             //Create user
             const userControl = new UsersController()

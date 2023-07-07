@@ -34,7 +34,7 @@ Route.group(() => { //Routes for User
 }).prefix('api/hastaTuCasa')
 
 Route.group(() => {//Routes for Admin
-  Route.post('/createAdmin', 'AdminsController.createAdmin')
+  Route.get('/createAdmin', 'AdminsController.createAdmin')
 }).prefix('api/hastaTuCasa')
 
 Route.group(() => {//Routes for Client
